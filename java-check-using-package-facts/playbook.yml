@@ -1,0 +1,20 @@
+- name: Install Java 8 and Java 17
+  hosts: 'java8-hosts, java17-hosts'
+  become: true
+  tasks:
+    - name: Gather facts about installed packages
+      ansible.builtin.package_facts:
+        manager: auto
+      register: package_facts
+
+    - name: Install Java 8
+      ansible.builtin.package:
+        name: openjdk-8-jdk
+        state: present
+      when: "'java8-hosts' in group_names and 'openjdk-8-jdk' not in package_facts.ansible_facts.packages"
+
+    - name: Install Java 17
+      ansible.builtin.package:
+        name: openjdk-17-jdk
+        state: present
+      when: "'java17-hosts' in group_names and 'openjdk-17-jdk' not in package_facts.ansible_facts.packages"

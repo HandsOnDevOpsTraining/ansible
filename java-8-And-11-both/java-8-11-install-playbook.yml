@@ -1,0 +1,18 @@
+- name: Install Java 8 and Java 17
+  hosts: 'java8-hosts, java17-hosts'
+  become: true
+  tasks:
+    - name: Update package cache
+      become: true
+      apt:
+        update_cache: yes
+    - name: Install Java 8
+      ansible.builtin.package:
+        name: openjdk-8-jdk
+        state: present
+      when: "'java8-hosts' in group_names"
+    - name: Install Java 17
+      ansible.builtin.package:
+        name: openjdk-17-jdk
+        state: present
+      when: "'java17-hosts' in group_names"

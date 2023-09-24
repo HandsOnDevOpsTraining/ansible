@@ -1,0 +1,26 @@
+---
+- name: Check and Install Java 17
+  hosts: aws-servers  # Replace with your actual target hosts or groups
+  gather_facts: true
+
+  tasks:
+    - name: Check if Java 17 is installed
+      shell: java -version 2>&1
+      register: java_version_output
+      changed_when: false
+      ignore_errors: true
+
+    - name: Determine if Java 17 is installed
+      set_fact:
+        java_17_installed: "{{ '17.' in java_version_output.stdout }}"
+
+    - name: Install Java 17
+      become: yes
+      apt:
+        name: openjdk-17-jdk  # Adjust for your package manager if not using APT
+        state: present
+      when: not java_17_installed
+
+    - name: Print Java 17 installation status
+      debug:
+        msg: "Java 17 is {{ 'installed' if java_17_installed else 'not installed' }}"
