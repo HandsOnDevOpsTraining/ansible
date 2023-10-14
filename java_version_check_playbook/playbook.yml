@@ -20,6 +20,10 @@
         name: openjdk-17-jdk  # Adjust for your package manager if not using APT
         state: present
       when: not java_17_installed
+    
+    - name: Determine if Java 17 is installed
+      set_fact:
+        java_17_installed: "{{ '17.' in java_version_output.stdout }}"
 
     - name: Print Java 17 installation status
       debug:
